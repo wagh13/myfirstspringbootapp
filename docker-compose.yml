@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  myfirstspringbootapp-container:
+    image: myfirstspringbootapp-docker-compose:1
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - /data/myfirstspringbootapp-container
+    ports:
+      - "8081-8100:8080"
