@@ -3,6 +3,7 @@ version: '3'
 services:
   myfirstspringbootapp-container:
     image: poojawagh13/my-employee-app:latest
+    Build:
       context: ./
       dockerfile: Dockerfile
     volumes:
