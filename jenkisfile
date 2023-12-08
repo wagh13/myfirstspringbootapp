@@ -1,0 +1,39 @@
+pipeline{
+    agent any
+        
+    stages{
+        stage("code"){
+            steps{
+                echo "Cloning the code"
+                git url:"https://github.com/wagh13/myfirstspringbootapp.git", branch:"master"
+                
+            }
+            
+        }
+        stage("Build"){
+            steps{
+                echo "Building the code"
+                sh "docker build -t my-employee-app ."
+            }
+            
+        }
+        stage("Push the Docker Hub"){
+            steps{
+                echo "Pushing the image to docker hub "
+                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]){
+                sh "docker tag my-employee-app ${env.dockerHubUser}/my-employee-app:latest"
+                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                sh "docker push ${env.dockerHubUser}/my-employee-app:latest"
+                }
+                
+            }
+        }
+        stage("Deploy"){
+            steps{
+                echo "Deploying the container "
+                sh "docker-compose down && docker-compose up -d"
+            }
+            
+        }
+    }
+}
